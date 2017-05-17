@@ -1,0 +1,40 @@
+# Add these function to your ~/.bashrc then run source ~/.bashrc.
+# You will have an easy way to set and uset proxy variables.
+# From a command prompt
+#    To set variables:   proxy
+#    To unset variables: proxyoff
+
+
+function proxy(){
+     echo -n "username:"
+     read -e username
+     echo -n "password:"
+     read -es password
+     export proxy_url=dc3-bc-1.jacksonnational.com
+     export proxy_port=8080
+     export proxy_user=$username
+     export proxy_password=$password
+     export http_proxy="http://$username:$password@$proxy_url:$proxy_port/"
+     export https_proxy=$http_proxy
+     export ftp_proxy=$http_proxy
+     export rsync_proxy=$http_proxy
+     export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+     echo -e "\nProxy environment variables set."
+ }
+ function proxyoff(){
+
+     unset proxy_url
+     unset proxy_port
+     unset proxy_user
+     unset proxy_password
+
+     unset HTTP_PROXY
+     unset http_proxy
+     unset HTTPS_PROXY
+     unset https_proxy
+     unset FTP_PROXY
+     unset ftp_proxy
+     unset RSYNC_PROXY
+     unset rsync_proxy
+     echo -e "\nProxy environment variables removed."
+ } 
