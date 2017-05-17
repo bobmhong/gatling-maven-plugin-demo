@@ -6,12 +6,28 @@ import scala.concurrent.duration._
 
 class BasicSimulation extends Simulation {
 
+  val proxy_url = System.getProperty("proxy_url")
+  val proxy_port = Integer.getInteger("proxy_port", 1)
+  val proxy_user = System.getProperty("proxy_user")
+  val proxy_password = System.getProperty("proxy_password")
+
+  printf("proxy_url = %s\n", proxy_url)
+  printf("proxy_port = %d\n", proxy_port)  
+  printf("proxy_user = %s\n", proxy_user)
+  //printf("proxy_password = %s", proxy_password)
+
   val httpConf = http
     .baseURL("http://computer-database.gatling.io") // Here is the root for all relative URLs
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8") // Here are the common headers
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("en-US,en;q=0.5")
     .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
+    .proxy(
+      Proxy(proxy_url, proxy_port)
+        .httpsPort(proxy_port)
+        .credentials(proxy_user, proxy_password)        
+        )
+    .noProxyFor("localhost")
 
   val scn = scenario("Scenario Name") // A scenario is a chain of requests and pauses
     .exec(http("request_1")
